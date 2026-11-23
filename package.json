@@ -1,0 +1,19 @@
+{
+  "name": "idle-hands-monorepo",
+  "private": true,
+  "type": "module",
+  "description": "Put idle agents to work on open, verifiable problems.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/web"
+  ],
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
+  }
+}
