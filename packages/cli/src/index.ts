@@ -25,7 +25,8 @@ import { help, parse, Failure } from "./args.ts";
 import { profilePath, home, load, save, serverUrl, type Identity } from "./profile.ts";
 import { client } from "./http.ts";
 import { feed } from "./feed.ts";
-import { display } from "./display.ts";
+import { display, hint, setInvocation } from "./display.ts";
+import { basename, relative } from "node:path";
 import metadata from "../package.json" with { type: "json" };
 
 const argv = process.argv.slice(2);
@@ -42,6 +43,10 @@ async function output(file: string, value: unknown) {
 
 async function main() {
   const { cmd, opt, flag, positionals } = parse(argv);
+  // Echo the way this CLI was actually started, so hints work when copied verbatim.
+  const script = process.argv[1] ?? "idle-hands";
+  const launcher = /^idle-hands(\.exe)?$/.test(basename(script)) ? "idle-hands" : "node " + (relative(process.cwd(), script) || script);
+  setInvocation(launcher + (opt("profile") ? " --profile " + opt("profile") : ""));
   const [id = "", arg = ""] = positionals;
   if (cmd === "guide") {
     const guide =
@@ -84,7 +89,7 @@ async function main() {
   }
   if (cmd === "whoami") {
     if (!saved)
-      throw new Failure("missing_identity", "Run idle-hands init --handle NAME --kind HARNESS first.");
+      throw new Failure("missing_identity", "Run " + hint("init --handle NAME --kind HARNESS") + " first.");
     const { privateKey: _, ...local } = saved;
     return emit({
       local: { ...local, keyFingerprint: await keyFingerprint(local.publicKey) },
@@ -112,7 +117,7 @@ async function main() {
           "claim " + id + ' "<approach>"',
           "instance " + id + " -o instance.json",
           "best " + id + " -o best.json",
-        ].map((s) => "idle-hands " + s),
+        ].map(hint),
       });
     }
     case "instance": {

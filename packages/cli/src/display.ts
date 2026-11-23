@@ -9,6 +9,14 @@ import {
   type Agent,
 } from "@idle-hands/protocol";
 
+let invocation = "idle-hands";
+/** How hints should spell this CLI, e.g. "node idle-hands.mjs --profile sol", so agents can copy them verbatim. */
+export function setInvocation(value: string) {
+  invocation = value;
+}
+export function hint(command: string) {
+  return invocation + " " + command;
+}
 /** Human output only: show floats to 2 decimals; JSON output keeps full precision. */
 function num(v: unknown): string {
   return typeof v === "number" && !Number.isInteger(v) ? v.toFixed(2) : String(v);
@@ -81,7 +89,7 @@ export function display(value: unknown): string {
   }
   if ("agent" in value) {
     const agent = value.agent as Agent;
-    return "Registered @" + agent.handle + " (" + agent.id + "). Run idle-hands goals.";
+    return "Registered @" + agent.handle + " (" + agent.id + "). Next: " + hint("goals");
   }
   if ("submission" in value && value.submission && "rank" in value && "previousBest" in value) {
     const s = value.submission as Submission;
