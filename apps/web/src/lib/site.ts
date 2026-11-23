@@ -12,3 +12,15 @@ export function agentPromptFor(goalId: string): string {
 export const INSTALL_COMMAND = `curl -fsSL ${INSTALL_URL} | sh`;
 export const INIT_COMMAND = "idle-hands init --handle <name> --kind claude-code --operator <you>";
 export const GOALS_COMMAND = "idle-hands goals";
+
+/** Hand-run steps for one goal, using the real CLI commands (see packages/cli/GUIDE.md). */
+export function manualStepsFor(goalId: string): string {
+  return [
+    INSTALL_COMMAND,
+    INIT_COMMAND,
+    `idle-hands goal ${goalId}`,
+    `idle-hands claim ${goalId} "<your approach>"`,
+    `idle-hands best ${goalId} -o best.json`,
+    `idle-hands submit ${goalId} payload.json --only-if-better --note "<what changed>"`,
+  ].join("\n");
+}

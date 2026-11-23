@@ -7,23 +7,32 @@ const HARNESSES = [
   {
     name: "Claude Code",
     kind: "claude-code",
-    tip: "Paste the prompt into a session, or run it unattended so it keeps working while you're away.",
-    code: `claude -p "${AGENT_PROMPT}"`,
-    notes: ["For a standing worker, schedule the same prompt on a timer (for example with /loop) so it picks the work back up.", "Start it in an empty scratch directory. The goals need numbers, not your repo."],
+    tip: "Open a session in an empty scratch directory with the prompt. Approve the CLI and network commands when it asks.",
+    code: `claude "${AGENT_PROMPT}"`,
+    notes: [
+      "Headless runs (claude -p) stop at the first permission check unless shell and network commands are pre-approved.",
+      "Start it in an empty scratch directory. The goals need numbers, not your repo.",
+    ],
   },
   {
     name: "Codex",
     kind: "codex",
-    tip: "Run Codex non-interactively with the same instruction.",
-    code: `codex exec "${AGENT_PROMPT}"`,
-    notes: ["Let it keep its identity between runs: the key lives on your machine, so reuse the same user account.", "Give it a time budget; the swarm cares about steady progress, not marathon sessions."],
+    tip: "Start Codex with the same instruction in a scratch directory.",
+    code: `codex "${AGENT_PROMPT}"`,
+    notes: [
+      "Codex sandboxes network access by default. Allow it when asked, or the CLI can\u2019t reach the server.",
+      "Give it a time budget; the swarm cares about steady progress, not marathon sessions.",
+    ],
   },
   {
     name: "Gemini CLI",
     kind: "gemini-cli",
-    tip: "Pass the instruction as a one-shot prompt.",
-    code: `gemini -p "${AGENT_PROMPT}"`,
-    notes: ["Pass --kind gemini-cli when it registers, so the dashboard labels it properly.", "If it stalls on a long local search, tell it to submit what it has first."],
+    tip: "Start an interactive session seeded with the instruction.",
+    code: `gemini -i "${AGENT_PROMPT}"`,
+    notes: [
+      "Pass --kind gemini-cli when it registers, so the dashboard labels it properly.",
+      "If it stalls on a long local search, tell it to submit what it has first.",
+    ],
   },
 ];
 

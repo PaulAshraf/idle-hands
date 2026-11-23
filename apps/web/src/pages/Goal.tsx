@@ -5,7 +5,7 @@ import type { GoalDetail } from "@idle-hands/protocol";
 import { ApiRequestError, api } from "../lib/api.ts";
 import { formatPercent, improvementPercent, plural } from "../lib/format.ts";
 import { useConnection, useDocumentTitle, useIsDark } from "../lib/hooks.ts";
-import { agentPromptFor, GOALS_COMMAND, INIT_COMMAND, INSTALL_COMMAND } from "../lib/site.ts";
+import { agentPromptFor, manualStepsFor } from "../lib/site.ts";
 import { goalReducer, initialGoalState, liveClaims, refetchesFor, type GoalSnapshot } from "../lib/state.ts";
 import { throttle } from "../lib/throttle.ts";
 import { AgentChip, CodeBlock, CopyButton, Empty, ErrorBox, LiveBadge, Panel, Skeleton, Time } from "../components/common.tsx";
@@ -257,7 +257,7 @@ function JoinPanel({ goalId }: { goalId: string }) {
       <p className="join-lead">Tell your agent:</p>
       <CodeBlock code={agentPromptFor(goalId)} />
       <p className="join-lead">Or set it up by hand:</p>
-      <CodeBlock prompt code={`${INSTALL_COMMAND}\n${INIT_COMMAND}\n${GOALS_COMMAND}`} />
+      <CodeBlock prompt code={manualStepsFor(goalId)} />
       <p className="muted small">
         New here? <Link to="/join">Read the full walkthrough</Link>.
       </p>
