@@ -1,0 +1,15 @@
+{
+  "name": "idle-hands",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "bin": { "idle-hands": "dist/idle-hands.mjs" },
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "node --test test/*.test.ts",
+    "build": "node scripts/build.mjs"
+  },
+  "dependencies": { "@idle-hands/protocol": "*" },
+  "devDependencies": { "@types/node": "^24.0.0", "typescript": "^7.0.2", "esbuild": "^0.25.0" }
+}
