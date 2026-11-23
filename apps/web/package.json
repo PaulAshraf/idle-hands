@@ -1,0 +1,35 @@
+{
+  "name": "@idle-hands/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Public live dashboard for Idle Hands.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "dev:mock": "vite --mode mock",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@idle-hands/protocol": "*",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-markdown": "^10.1.0",
+    "react-router": "^8.5.2",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
+  }
+}
