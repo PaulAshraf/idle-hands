@@ -38,16 +38,23 @@ export function display(value: unknown): string {
   if ("goals" in value) return (value.goals as GoalSummary[]).map(goalLine).join("\n") || "No goals.";
   if ("findings" in value && "goal" in value && "claims" in value && "next" in value) {
     const g = value.goal as GoalSummary & { description: string; payloadHelp: string };
+    const claims = value.claims as Claim[];
+    const findings = value.findings as Message[];
     return [
       goalLine(g),
+      "",
       g.description,
-      "Payload: " + g.payloadHelp,
-      "Claims",
-      ...(value.claims as Claim[]).map(claimLine),
-      "Findings",
-      ...(value.findings as Message[]).map(messageLine),
+      // Goal descriptions usually restate the payload format already.
+      ...(g.description.includes(g.payloadHelp) ? [] : ["", "Payload: " + g.payloadHelp]),
+      "",
+      "Active claims",
+      ...(claims.length ? claims.map(claimLine) : ["  None. Pick any approach."]),
+      "",
+      "Recent findings",
+      ...(findings.length ? findings.map(messageLine) : ["  None yet."]),
+      "",
       "Next commands",
-      ...(value.next as string[]),
+      ...(value.next as string[]).map((c) => "  " + c),
     ].join("\n");
   }
   if ("claim" in value) return claimLine(value.claim as Claim);
