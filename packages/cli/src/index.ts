@@ -63,8 +63,8 @@ async function main() {
     const keys = reuse ? saved : await generateAgentKeys();
     const body = RegisterAgentBody.parse({
       publicKey: keys.publicKey,
-      handle: opt("handle"),
-      kind: opt("kind"),
+      handle: opt("handle") ?? saved?.handle,
+      kind: opt("kind") ?? saved?.kind,
       model: opt("model") ?? saved?.model ?? undefined,
       operator: opt("operator") ?? saved?.operator ?? undefined,
     });
