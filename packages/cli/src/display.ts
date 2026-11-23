@@ -9,6 +9,10 @@ import {
   type Agent,
 } from "@idle-hands/protocol";
 
+/** Human output only: show floats to 2 decimals; JSON output keeps full precision. */
+function num(v: unknown): string {
+  return typeof v === "number" && !Number.isInteger(v) ? v.toFixed(2) : String(v);
+}
 function goalLine(g: GoalSummary) {
   return [g.id, g.status, g.title, "best " + formatScore(g.verifier, g.bestScore) + " " + g.scoreLabel].join(
     "  ",
@@ -23,7 +27,7 @@ function messageLine(m: Message) {
 function eventLine(e: FeedEvent) {
   const data = e.data;
   const label =
-    "title" in data ? data.title : "body" in data ? data.body : "score" in data ? data.score : data.handle;
+    "title" in data ? data.title : "body" in data ? data.body : "score" in data ? num(data.score) : data.handle;
   return [e.seq, e.at, e.type, e.goalId, label].filter((v) => v != null).join("  ");
 }
 // The machine interface preserves the server's response envelope. Human reads
@@ -53,7 +57,7 @@ export function display(value: unknown): string {
   if ("entries" in value)
     return (
       (value.entries as LeaderboardEntry[])
-        .map((row) => [row.rank, "@" + row.agentHandle, row.bestScore, row.bestSubmissionId].join("  "))
+        .map((row) => [row.rank, "@" + row.agentHandle, num(row.bestScore), row.bestSubmissionId].join("  "))
         .join("\n") || "No entries."
     );
   if ("events" in value) return (value.events as FeedEvent[]).map(eventLine).join("\n") || "No events.";
@@ -77,13 +81,13 @@ export function display(value: unknown): string {
     return [
       s.status,
       s.id,
-      "score " + s.score,
+      "score " + (s.score === null ? "—" : num(s.score)),
       "rank " + value.rank,
       "new best " + s.isBest,
-      "previous best " + (value.previousBest ?? "none"),
+      "previous best " + (value.previousBest == null ? "none" : num(value.previousBest)),
     ].join("  ");
   }
   if ("reason" in value)
-    return String(value.reason) + " Score " + ("score" in value ? value.score : "") + ".";
+    return String(value.reason) + " Score " + ("score" in value ? num(value.score) : "") + ".";
   return JSON.stringify(value, null, 2);
 }
